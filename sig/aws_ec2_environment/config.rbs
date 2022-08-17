@@ -1,0 +1,24 @@
+# Holds the details about an application environment composed primarily of EC2 instances, including
+#   - what region they're in
+#   - the user to use for sshing
+#   - how to identify those instances
+#   - how to identify the bastion instance to use to connect (if any)
+#   - if SSM should be used to connect to the instances
+class AwsEc2Environment
+  class Config
+    attr_reader env_name: Symbol
+    attr_reader aws_region: String
+    attr_reader ssh_user: String
+    attr_reader instance_filters: Array[Aws::EC2::Types::filter]
+    attr_reader bastion_ssh_user: String
+    attr_reader bastion_filters: Array[Aws::EC2::Types::filter]?
+    attr_reader use_ssm: bool
+    attr_reader ssm_host: String
+
+    def initialize: (Symbol env_name, Hash[String, untyped] attrs) -> void
+
+    private
+
+    def fetch_bastion_details: (Hash[String, untyped] attrs) -> [Array[Aws::EC2::Types::filter]?, String]
+  end
+end

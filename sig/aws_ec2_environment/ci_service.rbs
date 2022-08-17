@@ -1,0 +1,7 @@
+class AwsEc2Environment
+  class CiService
+    CI_SERVICES: Array[{ name: String, detect: String | ^() -> bool, build_id_var: String }]
+
+    def self.detect: () -> { name: String, build_id: String }?
+  end
+end

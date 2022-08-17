@@ -1,4 +1,39 @@
-module AwsEc2Environment
+class AwsEc2Environment
   VERSION: String
-  # See the writing guide of rbs: https://github.com/ruby/rbs#guides
+
+  attr_reader config: AwsEc2Environment::Config
+
+  def self.from_yaml_file: (String path, Symbol env_name) -> AwsEc2Environment
+
+  def initialize: (AwsEc2Environment::Config config, logger: Logger) -> void
+
+  def ips: () -> Array[String]
+
+  def ids: () -> Array[String]
+
+  def hosts_for_sshing: () -> Array[String]
+
+  def use_bastion_server?: () -> bool
+
+  def bastion_public_ip: () -> String
+
+  def build_ssh_bastion_proxy_command: () -> String
+
+  def stop_ssh_port_forwarding_sessions: () -> void
+
+  private
+
+  @config: AwsEc2Environment::Config
+  @logger: Logger
+  @ssm_port_forwarding_sessions: Array[AwsEc2Environment::SsmPortForwardingSession]
+
+  def start_ssh_port_forwarding_session: (String instance_id) -> Integer
+
+  def ec2: () -> Aws::EC2::Client
+
+  def ec2_describe_instances: (Array[Aws::EC2::Types::filter] filters) -> Array[Aws::EC2::Instance]
+
+  def ec2_instances: () -> Array[Aws::EC2::Instance]
+
+  def log: (String msg) -> bool
 end

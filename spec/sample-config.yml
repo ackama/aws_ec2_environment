@@ -1,0 +1,29 @@
+production:
+  aws_region: ap-southeast-2
+  ssh_user: deploy
+  ssm_host: 'ec2.#{id}.local.ackama.app'
+  # this should return one or more instances
+  filters:
+    - name: 'instance-state-name'
+      values: ['running']
+    - name: 'tag:Name'
+      values: ['RailsAppStandardExampleProductionAppServerAsg']
+  use_ssm: true
+
+staging:
+  aws_region: ap-southeast-2
+  ssh_user: deploy
+  # this should return one or more instances
+  filters:
+    - name: 'instance-state-name'
+      values: ['running']
+    - name: 'tag:Name'
+      values: ['RailsAppStandardExampleStagingAppServerAsg']
+  bastion_instance:
+    ssh_user: ubuntu
+    # this should return _one and only one_ instances
+    filters:
+      - name: 'instance-state-name'
+        values: ['running']
+      - name: 'tag:Name'
+        values: ['RailsAppStandardExampleStagingBastionAsg']

@@ -1,0 +1,46 @@
+class AwsEc2Environment
+  class SsmPortForwardingSession
+    attr_reader instance_id: String
+    attr_reader remote_port: Integer
+    attr_reader pid: String
+
+    def initialize: (
+        String instance_id,
+        Integer remote_port,
+        ?local_port: Integer | nil,
+        ?logger: Logger,
+        ?timeout: Numeric,
+        ?reason: String | nil
+      ) -> void
+
+    def close: () -> void
+
+    def wait_for_local_port: () -> Integer
+
+    private
+
+    @logger: Logger
+    @instance_id: String
+    @session_id: String
+    @remote_port: Integer
+    @local_port: Integer?
+    @timeout: Numeric
+    @cmd_output: String
+
+    def ssm_port_forward_cmd: (Integer | nil local_port, String | nil reason) -> String
+
+    # Checks the cmd process output until either the given +pattern+ matches or the +timeout+ is over.
+    #
+    # It returns an array with the result of the match or otherwise +nil+.
+    #
+    # This is effectively a re-implementation of the +File#expect+ method except it captures
+    # the cmd process output over time so we can include it in the case of errors
+    def expect_cmd_output: (Regexp | String pattern, Numeric timeout) -> (Array[String] | nil)
+
+    # Updates the tracked output of the cmd process with any new data that is available in the buffer,
+    # until the next read will block at which point this method returns.
+    def update_cmd_output: () -> void
+
+    def wait_for_session_id: () -> String
+  end
+end
