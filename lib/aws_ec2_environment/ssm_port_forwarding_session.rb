@@ -41,11 +41,9 @@ class AwsEc2Environment
     end
 
     def close
-      if @session_id
-        @logger.info "Terminating SSM session #{@session_id}..."
-        resp = Aws::SSM::Client.new.terminate_session({ session_id: @session_id })
-        @logger.info "Terminated SSM session #{resp.session_id} successfully"
-      end
+      @logger.info "Terminating SSM session #{@session_id}..."
+      resp = Aws::SSM::Client.new.terminate_session({ session_id: @session_id })
+      @logger.info "Terminated SSM session #{resp.session_id} successfully"
 
       @reader.close
       @writer.close
@@ -89,8 +87,6 @@ class AwsEc2Environment
     # This is effectively a re-implementation of the +File#expect+ method except it captures
     # the cmd process output over time so we can include it in the case of errors
     def expect_cmd_output(pattern, timeout)
-      pattern = Regexp.new(Regexp.quote(pattern)) if pattern.is_a? String
-
       Timeout.timeout(timeout) do
         loop do
           update_cmd_output
