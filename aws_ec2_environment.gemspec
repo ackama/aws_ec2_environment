@@ -11,7 +11,7 @@ Gem::Specification.new do |spec|
   spec.summary = "Interact with AWS EC2-based Ruby apps easily"
   spec.homepage = "https://github.com/ackama/aws_ec2_environment"
   spec.license = "MIT"
-  spec.required_ruby_version = ">= 3.0.0"
+  spec.required_ruby_version = ">= 2.7.5"
 
   spec.metadata["homepage_uri"] = spec.homepage
   spec.metadata["source_code_uri"] = spec.homepage

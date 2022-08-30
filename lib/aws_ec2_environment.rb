@@ -15,7 +15,7 @@ class AwsEc2Environment
   attr_reader :config
 
   def self.from_yaml_file(path, env_name)
-    config = YAML.safe_load_file(path).fetch(env_name.to_s, nil)
+    config = YAML.load_file(path).fetch(env_name.to_s, nil)
 
     fail EnvironmentConfigNotFound, "#{path} does not have an environment named \"#{env_name}\"" if config.nil?
 
