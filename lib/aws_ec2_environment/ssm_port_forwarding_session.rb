@@ -121,7 +121,7 @@ class AwsEc2Environment
     end
 
     def wait_for_session_id
-      _, session_id = expect_cmd_output(/Starting session with SessionId: ([\w-]+)\r?\n/, @timeout) || []
+      _, session_id = expect_cmd_output(/Starting session with SessionId: ([=,.@\w-]+)\r?\n/, @timeout) || []
 
       if session_id.nil?
         fail(
