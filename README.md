@@ -139,6 +139,10 @@ the instance id with `#{id}`.
 ### With Capistrano
 
 ```ruby
+#./ Capfile
+# ...
+require "aws_ec2_environment"
+
 # ./config/deploy/production.rb
 set :rails_env, "production"
 set :branch, "production"
