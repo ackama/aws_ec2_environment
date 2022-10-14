@@ -139,7 +139,7 @@ the instance id with `#{id}`.
 ### With Capistrano
 
 ```ruby
-#./ Capfile
+# ./Capfile
 # ...
 require "aws_ec2_environment"
 
