@@ -6,9 +6,9 @@ require "json"
 
 class AwsEc2Environment
   class SsmPortForwardingSession
-    class SessionIdNotFoundError < StandardError; end
-    class SessionTimedOutError < StandardError; end
-    class SessionProcessError < StandardError; end
+    class SessionIdNotFoundError < Error; end
+    class SessionTimedOutError < Error; end
+    class SessionProcessError < Error; end
 
     # @return [String]
     attr_reader :instance_id

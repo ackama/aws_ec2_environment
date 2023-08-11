@@ -8,9 +8,10 @@ require_relative "aws_ec2_environment/config"
 require_relative "aws_ec2_environment/version"
 
 class AwsEc2Environment
-  class BastionNotExpectedError < StandardError; end
-  class BastionNotFoundError < StandardError; end
-  class EnvironmentConfigNotFound < StandardError; end
+  class Error < StandardError; end
+  class BastionNotExpectedError < Error; end
+  class BastionNotFoundError < Error; end
+  class EnvironmentConfigNotFound < Error; end
 
   attr_reader :config
 
