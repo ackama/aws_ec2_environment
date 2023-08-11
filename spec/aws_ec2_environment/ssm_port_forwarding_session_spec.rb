@@ -21,9 +21,9 @@ class SsmProcessReaderStub
     if @buffer.empty?
       # if the subprocess is exited, then the buffer is empty this errno is thrown
       # TODO: (at least on Ubuntu 20.04, test with MacOS!)
-      fail Errno::EIO if @exited
+      raise Errno::EIO if @exited
 
-      fail IO::EAGAINWaitReadable
+      raise IO::EAGAINWaitReadable
     end
 
     @buffer.slice!(0, maxlen)

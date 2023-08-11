@@ -17,7 +17,7 @@ class AwsEc2Environment
   def self.from_yaml_file(path, env_name)
     config = YAML.safe_load_file(path).fetch(env_name.to_s, nil)
 
-    fail EnvironmentConfigNotFound, "#{path} does not have an environment named \"#{env_name}\"" if config.nil?
+    raise EnvironmentConfigNotFound, "#{path} does not have an environment named \"#{env_name}\"" if config.nil?
 
     new(AwsEc2Environment::Config.new(env_name, config))
   end
@@ -74,13 +74,13 @@ class AwsEc2Environment
   #   - the matched instance does not have a public ip
   def bastion_public_ip
     if @config.bastion_filters.nil?
-      fail BastionNotExpectedError, "The #{@config.env_name} environment is not configured with a bastion"
+      raise BastionNotExpectedError, "The #{@config.env_name} environment is not configured with a bastion"
     end
 
     instances = ec2_describe_instances(@config.bastion_filters)
 
     if instances.length != 1
-      fail(
+      raise(
         BastionNotFoundError,
         "#{instances.length} potential bastion instances were found - " \
         "please ensure your filters are specific enough to only return a single instance"
@@ -90,7 +90,7 @@ class AwsEc2Environment
     ip_address = instances[0].public_ip_address
 
     if ip_address.nil?
-      fail BastionNotFoundError, "a potential bastion instance was found, but it does not have a public ip"
+      raise BastionNotFoundError, "a potential bastion instance was found, but it does not have a public ip"
     end
 
     log "using bastion with ip #{ip_address}"

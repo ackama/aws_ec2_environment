@@ -14,17 +14,12 @@ AllCops:
   NewCops: enable
   DisplayCopNames: true
   DisplayStyleGuide: true
+  TargetRubyVersion: 3.0
   Exclude:
     - 'bin/*'
     - 'node_modules/**/*'
     - 'bower_components/**/*'
     - 'tmp/**/*'
-    - 'vendor/**/*'
-    - Gemfile
-    - Guardfile
-    - Rakefile
-    # exclude files in /vendor because some CI systems put gems in here e.g.
-    # TravisCI
     - 'vendor/**/*'
     - 'bin/**/*'
     - 'doc/**/*'
@@ -40,7 +35,7 @@ Metrics/BlockLength:
   Exclude:
     - 'spec/**/*.rb'
 
-# We generally don't want methods longer than 15 lines, except in migrations where it's probably okay.
+# We generally don't want methods longer than 20 lines, except in migrations where it's probably okay.
 Metrics/MethodLength:
   Max: 20
   Exclude:
@@ -54,9 +49,43 @@ Metrics/MethodLength:
 Naming/VariableNumber:
   Enabled: false
 
-# We prefer that you use `fail` unless you're explicitly re-raising an exception.
+# Just always use `raise` and stop thinking about it.
 Style/SignalException:
-  EnforcedStyle: semantic
+  EnforcedStyle: only_raise
+
+# We think that:
+#   array = [
+#     :value
+#   ]
+#   and_in_a_method_call([
+#     :value
+#   ])
+# Looks better than:
+#   value = [
+#     :value
+#   ]
+#   but_in_a_method_call([
+#                          :its_like_this
+#                         ])
+Layout/FirstArrayElementIndentation:
+  EnforcedStyle: consistent
+
+# We think that:
+#   hash = {
+#     key: :value
+#   }
+#   and_in_a_method_call({
+#     no: :difference
+#   })
+# Looks better than:
+#   hash = {
+#     key: :value
+#   }
+#   but_in_a_method_call({
+#                          its_like: :this
+#                         })
+Layout/FirstHashElementIndentation:
+  EnforcedStyle: consistent
 
 # We think that:
 #     {
@@ -95,6 +124,7 @@ Style/FrozenStringLiteralComment:
 # We usually don't want you to use semicolons in Ruby, except in specs where brevity is
 # often more valued than readability.
 Style/Semicolon:
+  AllowAsExpressionSeparator: true
   Exclude:
     - 'spec/**/*.rb'
 
@@ -193,15 +223,20 @@ Style/NumericPredicate:
 Style/TrivialAccessors:
   AllowPredicates: true
 
+RSpec:
+  Language:
+    Expectations:
+      - assert_match
+
 RSpec/MultipleExpectations:
   Max: 10
 
 RSpec/ExampleLength:
   Max: 30
 
-RSpec/FactoryBot/SyntaxMethods:
-  Enabled: false
-
 RSpec/RepeatedExample:
   Exclude:
     - 'spec/policies/**'
+
+RSpec/MultipleMemoizedHelpers:
+  Max: 10
