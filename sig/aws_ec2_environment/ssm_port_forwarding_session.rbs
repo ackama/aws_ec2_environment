@@ -1,5 +1,14 @@
 class AwsEc2Environment
   class SsmPortForwardingSession
+    class SessionIdNotFoundError < StandardError
+    end
+
+    class SessionTimedOutError < StandardError
+    end
+
+    class SessionProcessError < StandardError
+    end
+
     attr_reader instance_id: String
     attr_reader remote_port: Integer
     attr_reader pid: String

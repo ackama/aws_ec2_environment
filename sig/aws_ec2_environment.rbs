@@ -1,6 +1,15 @@
 class AwsEc2Environment
   VERSION: String
 
+  class BastionNotExpectedError < StandardError
+  end
+
+  class BastionNotFoundError < StandardError
+  end
+
+  class EnvironmentConfigNotFound < StandardError
+  end
+
   attr_reader config: Config
 
   def self.from_yaml_file: (String path, Symbol env_name) -> AwsEc2Environment
