@@ -1,5 +1,14 @@
 class AwsEc2Environment
   class SsmPortForwardingSession
+    class SessionIdNotFoundError < StandardError
+    end
+
+    class SessionTimedOutError < StandardError
+    end
+
+    class SessionProcessError < StandardError
+    end
+
     attr_reader instance_id: String
     attr_reader remote_port: Integer
     attr_reader pid: String
@@ -25,6 +34,8 @@ class AwsEc2Environment
     @remote_port: Integer
     @local_port: Integer?
     @timeout: Numeric
+    @reader: IO
+    @writer: IO
     @cmd_output: String
 
     def ssm_port_forward_cmd: (Integer | nil local_port, String | nil reason) -> String

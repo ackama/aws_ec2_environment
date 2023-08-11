@@ -1,11 +1,20 @@
 class AwsEc2Environment
   VERSION: String
 
-  attr_reader config: AwsEc2Environment::Config
+  class BastionNotExpectedError < StandardError
+  end
+
+  class BastionNotFoundError < StandardError
+  end
+
+  class EnvironmentConfigNotFound < StandardError
+  end
+
+  attr_reader config: Config
 
   def self.from_yaml_file: (String path, Symbol env_name) -> AwsEc2Environment
 
-  def initialize: (AwsEc2Environment::Config config, logger: Logger) -> void
+  def initialize: (Config config, logger: Logger) -> void
 
   def ips: () -> Array[String]
 
@@ -23,11 +32,14 @@ class AwsEc2Environment
 
   private
 
-  @config: AwsEc2Environment::Config
+  @config: Config
   @logger: Logger
-  @ssm_port_forwarding_sessions: Array[AwsEc2Environment::SsmPortForwardingSession]
+  @ssm_port_forwarding_sessions: Array[SsmPortForwardingSession]
+  @ec2: Aws::EC2::Client | nil
 
   def start_ssh_port_forwarding_session: (String instance_id) -> Integer
+
+  def ssm_session_reason: () -> String
 
   def ec2: () -> Aws::EC2::Client
 
