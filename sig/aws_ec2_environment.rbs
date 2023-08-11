@@ -1,13 +1,16 @@
 class AwsEc2Environment
   VERSION: String
 
-  class BastionNotExpectedError < StandardError
+  class Error < StandardError
   end
 
-  class BastionNotFoundError < StandardError
+  class BastionNotExpectedError < Error
   end
 
-  class EnvironmentConfigNotFound < StandardError
+  class BastionNotFoundError < Error
+  end
+
+  class EnvironmentConfigNotFound < Error
   end
 
   attr_reader config: Config
