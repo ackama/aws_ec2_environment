@@ -1,11 +1,11 @@
 class AwsEc2Environment
   VERSION: String
 
-  attr_reader config: AwsEc2Environment::Config
+  attr_reader config: Config
 
   def self.from_yaml_file: (String path, Symbol env_name) -> AwsEc2Environment
 
-  def initialize: (AwsEc2Environment::Config config, logger: Logger) -> void
+  def initialize: (Config config, logger: Logger) -> void
 
   def ips: () -> Array[String]
 
@@ -23,9 +23,9 @@ class AwsEc2Environment
 
   private
 
-  @config: AwsEc2Environment::Config
+  @config: Config
   @logger: Logger
-  @ssm_port_forwarding_sessions: Array[AwsEc2Environment::SsmPortForwardingSession]
+  @ssm_port_forwarding_sessions: Array[SsmPortForwardingSession]
 
   def start_ssh_port_forwarding_session: (String instance_id) -> Integer
 
