@@ -26,8 +26,11 @@ class AwsEc2Environment
   @config: Config
   @logger: Logger
   @ssm_port_forwarding_sessions: Array[SsmPortForwardingSession]
+  @ec2: Aws::EC2::Client | nil
 
   def start_ssh_port_forwarding_session: (String instance_id) -> Integer
+
+  def ssm_session_reason: () -> String
 
   def ec2: () -> Aws::EC2::Client
 

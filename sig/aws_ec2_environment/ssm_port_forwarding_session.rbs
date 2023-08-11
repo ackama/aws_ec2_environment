@@ -25,6 +25,8 @@ class AwsEc2Environment
     @remote_port: Integer
     @local_port: Integer?
     @timeout: Numeric
+    @reader: IO
+    @writer: IO
     @cmd_output: String
 
     def ssm_port_forward_cmd: (Integer | nil local_port, String | nil reason) -> String
