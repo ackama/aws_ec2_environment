@@ -53,7 +53,7 @@ class AwsEc2Environment
       _, local_port = expect_cmd_output(/Port (\d+) opened for sessionId #{@session_id}.\r?\n/, @timeout) || []
 
       if local_port.nil?
-        fail(
+        raise(
           SessionTimedOutError,
           "SSM session #{@session_id} did not become ready within #{@timeout} seconds (maybe increase the timeout?)"
         )
@@ -124,7 +124,7 @@ class AwsEc2Environment
       _, session_id = expect_cmd_output(/Starting session with SessionId: ([=,.@\w-]+)\r?\n/, @timeout) || []
 
       if session_id.nil?
-        fail(
+        raise(
           SessionIdNotFoundError,
           "could not find session id within #{@timeout} seconds - SSM plugin output: #{@cmd_output}"
         )
