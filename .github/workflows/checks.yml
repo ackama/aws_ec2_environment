@@ -32,7 +32,12 @@ jobs:
         with:
           ruby-version: ${{ matrix.ruby }}
           bundler-cache: true
-      - run: bundle exec rspec
+      - run: bundle exec rspec --format RspecJunitFormatter --out junit.xml --format progress
+      - name: Publish Test Report
+        uses: mikepenz/action-junit-report@v3
+        if: success() || failure()
+        with:
+          report_paths: 'junit.xml'
   lint:
     runs-on: ubuntu-latest
     steps:
