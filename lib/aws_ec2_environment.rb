@@ -97,6 +97,7 @@ class AwsEc2Environment
     log "using bastion with ip #{ip_address}"
 
     ip_address
+    []
   end
 
   # Builds a +ProxyCommand+ that can be used with +ssh+ to connect through the bastion instance,

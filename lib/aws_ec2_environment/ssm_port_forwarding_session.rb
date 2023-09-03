@@ -115,7 +115,7 @@ class AwsEc2Environment
       # do nothing as we don't want to block
     rescue Errno::EIO
       output = @cmd_output.strip
-      output = "<nothing was outputted by process>" if output.empty?
+      # output = "<nothing was outputted by process>" if output.empty?
 
       raise SessionProcessError, output
     end
