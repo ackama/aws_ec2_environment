@@ -96,7 +96,7 @@ class AwsEc2Environment
 
     log "using bastion with ip #{ip_address}"
 
-    ip_address
+    return ip_address unless RUBY_VERSION.start_with?("3.0")
     []
   end
 
