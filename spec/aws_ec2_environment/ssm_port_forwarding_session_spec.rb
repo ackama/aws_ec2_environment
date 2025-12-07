@@ -13,7 +13,7 @@
 # correctly given we've not an actual pipe.
 class SsmProcessReaderStub
   def initialize(buffer, exited)
-    @buffer = buffer
+    @buffer = +buffer
     @exited = exited
   end
 
@@ -37,14 +37,14 @@ RSpec.describe AwsEc2Environment::SsmPortForwardingSession do
     described_class.new(
       "i-0d9c4bg3f26157a8e",
       22,
-      logger: Logger.new(StringIO.new(log)),
+      logger: Logger.new(log),
       # we can use a really low timeout to make the tests a lot faster,
       # since we're not actually going to be writing asynchronously
       timeout: 0.00001
     )
   end
 
-  let(:log) { "" }
+  let(:log) { StringIO.new }
   let(:reader) { SsmProcessReaderStub.new("Starting session with SessionId: #{session_id}\n", false) }
   let(:writer) { instance_double(File) }
   let(:ssm_client) { instance_double(Aws::SSM::Client) }
@@ -78,7 +78,7 @@ RSpec.describe AwsEc2Environment::SsmPortForwardingSession do
     it "grabs the session id from the session-manager-plugin" do
       expect { session }.not_to raise_error
 
-      expect(log).to include("SSM session #{session_id} opening")
+      expect(log.string).to include("SSM session #{session_id} opening")
     end
 
     context "when a local_port is provided" do
@@ -87,7 +87,7 @@ RSpec.describe AwsEc2Environment::SsmPortForwardingSession do
           "i-0d9c4bg3f26157a8e",
           22,
           local_port: 9999,
-          logger: Logger.new(StringIO.new(log)),
+          logger: Logger.new(log),
           # we can use a really low timeout to make the tests a lot faster,
           # since we're not actually going to be writing asynchronously
           timeout: 0.00001
@@ -116,7 +116,7 @@ RSpec.describe AwsEc2Environment::SsmPortForwardingSession do
         described_class.new(
           "i-0d9c4bg3f26157a8e",
           22,
-          logger: Logger.new(StringIO.new(log)),
+          logger: Logger.new(log),
           # we can use a really low timeout to make the tests a lot faster,
           # since we're not actually going to be writing asynchronously
           timeout: 0.00001,
@@ -221,7 +221,7 @@ RSpec.describe AwsEc2Environment::SsmPortForwardingSession do
         "i-0d9c4bg3f26157a8e",
         22,
         local_port: 9999,
-        logger: Logger.new(StringIO.new(log)),
+        logger: Logger.new(log),
         # we can use a really low timeout to make the tests a lot faster,
         # since we're not actually going to be writing asynchronously
         timeout: 0.00001
@@ -255,7 +255,7 @@ RSpec.describe AwsEc2Environment::SsmPortForwardingSession do
         session.close
 
         expect(ssm_client).to have_received(:terminate_session).with({ session_id: session_id })
-        expect(log).to include("Terminated SSM session #{session_id} successfully")
+        expect(log.string).to include("Terminated SSM session #{session_id} successfully")
       end
     end
 

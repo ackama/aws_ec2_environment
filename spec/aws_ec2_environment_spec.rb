@@ -3,11 +3,11 @@ require "json"
 
 # Creates a new Logger which logs to the given +str+
 #
-# @param [String] str
+# @param [StringIO] str
 #
 # @return [Logger]
-def str_logger(str = "")
-  Logger.new(StringIO.new(str))
+def str_logger(str = StringIO.new)
+  Logger.new(str)
 end
 
 def mock_ec2_describe_instances(ec2_client, instances)
