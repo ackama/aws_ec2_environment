@@ -175,6 +175,98 @@ RSpec.describe AwsEc2Environment::SsmPortForwardingSession do
         )
       end
     end
+
+    context "when a specific document is provided" do
+      subject(:session) do
+        described_class.new(
+          "i-0d9c4bg3f26157a8e",
+          22,
+          document: "AWS-StartPortForwardingSessionToRemoteHost",
+          logger: Logger.new(log),
+          # we can use a really low timeout to make the tests a lot faster,
+          # since we're not actually going to be writing asynchronously
+          timeout: 0.00001
+        )
+      end
+
+      it "uses the document" do
+        expect { session }.not_to raise_error
+
+        parameters = { "portNumber" => ["22"] }
+        parameters_escaped = Shellwords.escape(parameters.to_json)
+
+        expect(PTY).to have_received(:spawn).with(
+          %w[
+            aws ssm start-session
+            --target i-0d9c4bg3f26157a8e
+            --document-name AWS-StartPortForwardingSessionToRemoteHost
+            --parameters
+          ].join(" ") + " #{parameters_escaped}"
+        )
+      end
+    end
+
+    context "when extra parameters are provided" do
+      it "merges them" do
+        expect do
+          described_class.new(
+            "i-0d9c4bg3f26157a8e",
+            22,
+            extra_params: { "host" => ["my-database.abc.ap-southeast-2.rds.amazonaws.com"] },
+            logger: Logger.new(log),
+            # we can use a really low timeout to make the tests a lot faster,
+            # since we're not actually going to be writing asynchronously
+            timeout: 0.00001
+          )
+        end.not_to raise_error
+
+        parameters = { "host" => ["my-database.abc.ap-southeast-2.rds.amazonaws.com"], "portNumber" => ["22"] }
+        parameters_escaped = Shellwords.escape(parameters.to_json)
+
+        expect(PTY).to have_received(:spawn).with(
+          %w[
+            aws ssm start-session
+            --target i-0d9c4bg3f26157a8e
+            --document-name AWS-StartPortForwardingSession
+            --parameters
+          ].join(" ") + " #{parameters_escaped}"
+        )
+      end
+
+      it "overrides them with specific parameters" do
+        expect do
+          described_class.new(
+            "i-0d9c4bg3f26157a8e",
+            22,
+            extra_params: {
+              "host" => ["my-database.abc.ap-southeast-2.rds.amazonaws.com"],
+              "localPortNumber" => [1234]
+            },
+            local_port: 5432,
+            logger: Logger.new(log),
+            # we can use a really low timeout to make the tests a lot faster,
+            # since we're not actually going to be writing asynchronously
+            timeout: 0.00001
+          )
+        end.not_to raise_error
+
+        parameters = {
+          "host" => ["my-database.abc.ap-southeast-2.rds.amazonaws.com"],
+          "localPortNumber" => ["5432"],
+          "portNumber" => ["22"]
+        }
+        parameters_escaped = Shellwords.escape(parameters.to_json)
+
+        expect(PTY).to have_received(:spawn).with(
+          %w[
+            aws ssm start-session
+            --target i-0d9c4bg3f26157a8e
+            --document-name AWS-StartPortForwardingSession
+            --parameters
+          ].join(" ") + " #{parameters_escaped}"
+        )
+      end
+    end
   end
 
   describe "#instance_id" do
