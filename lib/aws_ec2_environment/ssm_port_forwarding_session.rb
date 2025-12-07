@@ -34,7 +34,7 @@ class AwsEc2Environment
 
       @reader, @writer, @pid = PTY.spawn(ssm_port_forward_cmd(local_port, reason))
 
-      @cmd_output = ""
+      @cmd_output = +""
       @session_id = wait_for_session_id
 
       @logger.info("SSM session #{@session_id} opening, forwarding port #{remote_port} on #{instance_id}")
