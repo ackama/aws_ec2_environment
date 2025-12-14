@@ -16,10 +16,12 @@ class AwsEc2Environment
     def initialize: (
         String instance_id,
         Integer remote_port,
+        ?document: String,
         ?local_port: Integer | nil,
         ?logger: Logger,
         ?timeout: Numeric,
-        ?reason: String | nil
+        ?reason: String | nil,
+        ?extra_params: Hash[String, untyped]
       ) -> void
 
     def close: () -> void
@@ -38,7 +40,12 @@ class AwsEc2Environment
     @writer: IO
     @cmd_output: String
 
-    def ssm_port_forward_cmd: (Integer | nil local_port, String | nil reason) -> String
+    def ssm_port_forward_cmd: (
+        Integer | nil local_port,
+        String | nil reason,
+        String document_name,
+        Hash[String, untyped] extra_params
+      ) -> String
 
     # Checks the cmd process output until either the given +pattern+ matches or the +timeout+ is over.
     #
