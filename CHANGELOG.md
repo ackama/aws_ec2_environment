@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.1.1] - 2025-12-15
+
 ### Fixed
 
 - Make sure string used for capturing cmd output is unfrozen
