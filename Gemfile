@@ -13,3 +13,4 @@ gem "rubocop", "~> 1.21"
 gem "rubocop-performance"
 gem "rubocop-rspec"
 gem "simplecov", require: false
+gem "rspec_junit_formatter", require: false
