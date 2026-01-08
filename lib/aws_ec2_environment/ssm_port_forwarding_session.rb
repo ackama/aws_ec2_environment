@@ -22,8 +22,9 @@ class AwsEc2Environment
     # rubocop:disable Metrics/ParameterLists
     def initialize(
       instance_id, remote_port,
+      document: "AWS-StartPortForwardingSession",
       local_port: nil, logger: Logger.new($stdout),
-      timeout: 15, reason: nil
+      timeout: 15, reason: nil, extra_params: {}
     )
       # rubocop:enable Metrics/ParameterLists
       @logger = logger
@@ -32,7 +33,7 @@ class AwsEc2Environment
       @local_port = nil
       @timeout = timeout
 
-      @reader, @writer, @pid = PTY.spawn(ssm_port_forward_cmd(local_port, reason))
+      @reader, @writer, @pid = PTY.spawn(ssm_port_forward_cmd(local_port, reason, document, extra_params))
 
       @cmd_output = +""
       @session_id = wait_for_session_id
@@ -64,9 +65,8 @@ class AwsEc2Environment
 
     private
 
-    def ssm_port_forward_cmd(local_port, reason)
-      document_name = "AWS-StartPortForwardingSession"
-      parameters = { "portNumber" => [remote_port.to_s] }
+    def ssm_port_forward_cmd(local_port, reason, document_name, extra_params)
+      parameters = extra_params.merge({ "portNumber" => [remote_port.to_s] })
       parameters["localPortNumber"] = [local_port.to_s] unless local_port.nil?
       flags = [
         ["--target", instance_id],

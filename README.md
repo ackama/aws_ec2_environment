@@ -199,6 +199,44 @@ task :forward_port, %i[instance_id remote_port local_port] => :environment do |_
 end
 ```
 
+You can also use specific documents, and pass in extra parameters, which can be
+useful for using tunnels to access other private resources like database
+instances:
+
+```ruby
+require "aws_ec2_environment"
+
+desc "Dumps a copy of the postgres database using AWS and PG environment variables"
+task :dump_pg_database, %i[instance_id dump_file] => :environment do |_, args|
+  instance_id = args.fetch(:instance_id)
+  dump_file = args.fetch(:dump_file)
+
+  remote_host = ENV.fetch("PGHOST")
+  remote_port = ENV.fetch("PGPORT", 5432).to_i
+
+  session = AwsEc2Environment::SsmPortForwardingSession.new(
+    instance_id,
+    remote_port,
+    document: "AWS-StartPortForwardingSessionToRemoteHost",
+    extra_params: { "host" => [remote_host] }
+  )
+
+  at_exit { session.close }
+
+  local_port = session.wait_for_local_port
+
+  system(
+    "pg_dump",
+    "--format=c",
+    "--no-owner",
+    "--no-privileges",
+    "--host=localhost",
+    "--port=#{local_port}",
+    "--file=#{dump_file}",
+  )
+end
+```
+
 ### AWS Authentication and Permissions
 
 Since this gem interacts with AWS, it must be configured with credentials - see

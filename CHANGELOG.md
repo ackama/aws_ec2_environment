@@ -1,5 +1,11 @@
 ## [Unreleased]
 
+### Added
+
+- Support using alternative documents and parameters with
+  `SsmPortForwardingSession`
+  ([#22](https://github.com/ackama/aws_ec2_environment/pull/22))
+
 ## [0.1.1] - 2025-12-15
 
 ### Fixed
