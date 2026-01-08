@@ -1,5 +1,7 @@
 ## [Unreleased]
 
+## [0.2.0] - 2025-12-15
+
 ### Added
 
 - Support using alternative documents and parameters with
